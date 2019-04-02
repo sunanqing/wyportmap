@@ -39,7 +39,7 @@ def do_nmap_scan(targets, options=global_options):
         runtime = 0
 
         if trycnt >= retrycnt:
-            print '-' * 50
+            print ('-' * 50)
             return 'retry overflow'
 
         try:
@@ -48,29 +48,29 @@ def do_nmap_scan(targets, options=global_options):
 
             while nmap_proc.is_running():
                 if runtime >= timeout:    # 运行超时，结束掉任务，休息1分钟, 再重启这个nmap任务
-                    print '-' * 50
-                    print "* timeout. terminate it..."
+                    print ('-' * 50)
+                    print ("* timeout. terminate it...")
                     nmap_proc.stop()
                     # 休眠时间
                     sleep(5)
                     trycnt += 1
                     break
                 else:
-                    print 'running[%ss]:%s' % (runtime, nmap_proc.command)
+                    print ('running[%ss]:%s' % (runtime, nmap_proc.command))
                     sleep(5)
                     runtime += 5
             if nmap_proc.is_successful():
-                print '-' * 50
-                print nmap_proc.summary
+                print ('-' * 50)
+                print (nmap_proc.summary)
                 return nmap_proc.stdout
 
-        except Exception, e:
+        except Exception as e:
             # raise e
-            print e
+            print (e)
             trycnt += 1
             if trycnt >= retrycnt:
-                print '-' * 50
-                print '* retry overflow'
+                print ('-' * 50)
+                print ('* retry overflow')
                 return e
 
 def parse_nmap_report(nmap_stdout, taskid=None):
@@ -101,16 +101,16 @@ def parse_nmap_report(nmap_stdout, taskid=None):
 
         return '* Scan finished'
 
-    except Exception, e:
+    except Exception as e:
         # 处理报表出错，返回错误结果
         return e
 
 def run_wyportmap(targets, taskid=None):
-    print '-' * 50
-    print '* Starting id:(%s) [%s] portmap scan' % (taskid, targets)
-    print '-' * 50
+    print ('-' * 50)
+    print ('* Starting id:(%s) [%s] portmap scan' % (taskid, targets))
+    print ('-' * 50)
     nmap_result = do_nmap_scan(targets)
-    print '-' * 50
+    print ('-' * 50)
     if nmap_result == 'retry overflow':
         return 'retry end'
     return parse_nmap_report(nmap_result,taskid)
@@ -118,10 +118,10 @@ def run_wyportmap(targets, taskid=None):
 if __name__ == "__main__":
     if len(sys.argv) == 2:
         #print sys.argv[1]
-        print run_wyportmap(sys.argv[1])
+        print (run_wyportmap(sys.argv[1]))
         sys.exit(0)
     elif len(sys.argv) == 3:
-        print run_wyportmap(sys.argv[1], sys.argv[2])
+        print (run_wyportmap(sys.argv[1], sys.argv[2]))
     else:
         print ("usage: %s targets taskid" % sys.argv[0])
         sys.exit(-1)
